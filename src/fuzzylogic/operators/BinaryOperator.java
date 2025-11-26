@@ -1,5 +1,5 @@
 package fuzzylogic.operators;
 
-public interface OrOperator {
+public interface BinaryOperator {
     double apply(double a, double b);
 }

@@ -1,5 +1,5 @@
 package fuzzylogic.operators;
 
-public interface NotOperator {
+public interface UnaryOperator {
     double apply(double x);
 }

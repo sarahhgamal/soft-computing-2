@@ -1,8 +1,8 @@
 package fuzzylogic.operators;
 
-public class OrMax implements BinaryOperator {
+public class OrSum implements BinaryOperator {
     @Override
     public double apply(double a, double b) {
-        return Math.max(a, b);
+        return a + b - (a * b);
     }
 }

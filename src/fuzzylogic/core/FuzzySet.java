@@ -1,6 +1,6 @@
 package fuzzylogic.core;
 
-import fuzzylogic.membershipfunction.MembershipFunction;
+import fuzzylogic.membershipFunction.MembershipFunction;
 
 public class FuzzySet {
     private final String name;

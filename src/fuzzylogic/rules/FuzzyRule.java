@@ -1,11 +1,14 @@
 package fuzzylogic.rules;
 
+import fuzzylogic.operators.BinaryOperator;
+import fuzzylogic.operators.UnaryOperator;
+
 import java.util.*;
 
 public class FuzzyRule {
     private final String name;
     private final List<Antecedent> antecedents;
-    private Consequent consequent;  // not final
+    private Consequent consequent;
     private boolean enabled;
     private double weight;
 
@@ -16,39 +19,36 @@ public class FuzzyRule {
         this.weight = 1.0;
     }
 
-    // Add an antecedent: AND/OR + optional NOT
     public void addAntecedent(String variable, String fuzzySet, boolean isAnd, boolean isNot) {
         antecedents.add(new Antecedent(variable, fuzzySet, isAnd, isNot));
     }
 
-    // Set the rule's consequent
     public void setConsequent(String variable, String fuzzySet) {
         this.consequent = new Consequent(variable, fuzzySet);
     }
 
-    // Evaluate rule strength given fuzzified inputs
-    public double evaluateStrength(Map<String, Map<String, Double>> fuzzifiedInputs) {
+    public double evaluateStrength(Map<String, Map<String, Double>> fuzzifiedInputs, BinaryOperator andOp, BinaryOperator orOp, UnaryOperator notOp) {
         if (!enabled || antecedents.isEmpty()) return 0.0;
 
-        // Start with first antecedent
         Antecedent first = antecedents.get(0);
         double strength = fuzzifiedInputs.get(first.variable).get(first.fuzzySet);
-        if (first.isNot) strength = 1.0 - strength;
+        if (first.isNot) {
+            strength = notOp.apply(strength);
+        }
 
-        // Combine remaining antecedents using AND/OR
         for (int i = 1; i < antecedents.size(); i++) {
             Antecedent ant = antecedents.get(i);
             double value = fuzzifiedInputs.get(ant.variable).get(ant.fuzzySet);
-            if (ant.isNot) value = 1.0 - value;
+            if (ant.isNot) {
+                value = notOp.apply(value);
+            }
 
-            strength = ant.isAnd ? Math.min(strength, value) : Math.max(strength, value);
+            strength = ant.isAnd ? andOp.apply(strength, value) : orOp.apply(strength, value);
         }
 
-        // Apply rule weight
         return strength * weight;
     }
 
-    // Getters and setters
     public String getName() { return name; }
     public Consequent getConsequent() { return consequent; }
     public boolean isEnabled() { return enabled; }

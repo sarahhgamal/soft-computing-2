@@ -1,4 +1,4 @@
-package fuzzylogic.membershipfunction;
+package fuzzylogic.membershipFunction;
 
 public class GaussianMF implements MembershipFunction {
     private final double mean, sigma;

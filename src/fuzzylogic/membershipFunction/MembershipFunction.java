@@ -1,4 +1,4 @@
-package fuzzylogic.membershipfunction;
+package fuzzylogic.membershipFunction;
 
 public interface MembershipFunction {
     double evaluate(double x);
